@@ -79,4 +79,8 @@ extern CAR_DATA* CheckForCar(LPPEDESTRIAN pedestrian); // 0x00072738
 
 extern void CalculatePedestrianInterest(LPPEDESTRIAN pPed); // 0x00071E0C
 
+#ifdef FEAT_TANNER_SAY_HEY_ON_ENTER_CAR
+extern int gAlwaysSayHeyOnEnterCar;
+#endif
+
 #endif

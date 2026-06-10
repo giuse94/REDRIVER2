@@ -88,6 +88,10 @@ const int tannerTurnStep = 4;
 
 int bKillTanner = 0;
 
+#ifdef FEAT_TANNER_SAY_HEY_ON_ENTER_CAR
+int gAlwaysSayHeyOnEnterCar = 0;
+#endif
+
 SEATEDPTR seated_pedestrian;	// lump
 int seated_count;
 int maxSeated;
@@ -1166,6 +1170,10 @@ void SetupGetInCar(LPPEDESTRIAN pPed)
 	pPed->frame1 = 0;
 
 	playerId = pPed->padId;
+	// Always assign: less efficient, but cleaner.
+	pos[0] = player[playerId].pos[0];
+	pos[1] = -player[playerId].pos[1];
+	pos[2] = player[playerId].pos[2];
 
 	sn = rsin(carToGetIn->hd.direction);
 	cs = rcos(carToGetIn->hd.direction);
@@ -1192,6 +1200,13 @@ void SetupGetInCar(LPPEDESTRIAN pPed)
 		player[playerId].cameraPos.vz = carToGetIn->hd.where.t[2] + (FIXED(xOfs * RSIN(carDir)) + FIXED(RCOS(carDir) * 800));
 	}
 
+#ifdef FEAT_TANNER_SAY_HEY_ON_ENTER_CAR
+	if (gAlwaysSayHeyOnEnterCar)
+	{
+		Start3DSoundVolPitch(-1, SOUND_BANK_TANNER, 5, pos[0], pos[1], pos[2], 0, 0x1000); // HEY!
+	}
+#endif
+	
 	if ((carToGetIn->controlFlags & CONTROL_FLAG_WAS_PARKED) == 0)
 	{
 		if (carToGetIn->controlType == CONTROL_TYPE_CIV_AI && carToGetIn->ai.c.thrustState == 3 && carToGetIn->ai.c.ctrlState == 5)
@@ -1200,13 +1215,14 @@ void SetupGetInCar(LPPEDESTRIAN pPed)
 		}
 		else
 		{
-			pos[0] = player[playerId].pos[0];
-			pos[1] = -player[playerId].pos[1];
-			pos[2] = player[playerId].pos[2];
-
-			// HEY!
 			CreatePedAtLocation(&pos, 8);
-			Start3DSoundVolPitch(-1, SOUND_BANK_TANNER, 5, pos[0], pos[1], pos[2], 0, 0x1000);
+
+#ifdef FEAT_TANNER_SAY_HEY_ON_ENTER_CAR
+			if (!gAlwaysSayHeyOnEnterCar) // Don't say it twice.
+				Start3DSoundVolPitch(-1, SOUND_BANK_TANNER, 5, pos[0], pos[1], pos[2], 0, 0x1000); // HEY!
+#else
+			Start3DSoundVolPitch(-1, SOUND_BANK_TANNER, 5, pos[0], pos[1], pos[2], 0, 0x1000); // HEY!
+#endif
 
 			carToGetIn->controlFlags |= CONTROL_FLAG_WAS_PARKED;
 		}

@@ -38,6 +38,11 @@
 #define ENABLE_GAME_ENCHANCEMENTS	1
 #define ENABLE_BONUS_CONTENT		1
 
+#if ENABLE_GAME_ENCHANCEMENTS
+#define FEAT_TANNER_SAY_HEY_ON_ENTER_CAR
+#endif
+
+
 #ifdef PSX
 // TODO: Include PSX STUFF
 #define trap(code)

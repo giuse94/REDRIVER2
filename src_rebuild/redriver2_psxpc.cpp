@@ -20,6 +20,9 @@
 #include "C/players.h"
 #include "C/time.h"
 #include "C/draw.h"
+#ifdef FEAT_TANNER_SAY_HEY_ON_ENTER_CAR
+#include "C/pedest.h"
+#endif
 
 #include "utils/ini.h"
 
@@ -595,6 +598,9 @@ int main(int argc, char** argv)
 		ini_sget(config, "game", "fastLoadingScreens", "%d", &gFastLoadingScreens);
 		ini_sget(config, "game", "languageId", "%d", &gUserLanguage);
 		ini_sget(config, "game", "overrideContent", "%d", &gContentOverride);
+#ifdef FEAT_TANNER_SAY_HEY_ON_ENTER_CAR
+		ini_sget(config, "game", "alwaysSayHeyOnEnterCar", "%d", &gAlwaysSayHeyOnEnterCar);
+#endif
 		
 	
 		gCameraDefaultScrZ = MAX(MIN(newScrZ, 384), 128);
